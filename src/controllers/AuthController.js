@@ -13,8 +13,8 @@ const login = async (req, res) => {
     if (!errors.isEmpty())
       return res.status(422).json({ errors: errors.array() });
 
-    const { useremail, pass } = req.body;
-    const payload = await authService.login(useremail, pass);
+    const { email, password } = req.body;
+    const payload = await authService.login(email, password);
     if (payload) {
       jwt.sign(
         payload,
@@ -25,7 +25,7 @@ const login = async (req, res) => {
         (err, token) => {
           if (err) throw err;
           return res.status(status.OK).json({
-            accessToken: token,
+            token: token,
             isValid: payload.user.isValid,
           });
         }
@@ -43,8 +43,8 @@ const login = async (req, res) => {
 // validate user registeration
 const validate = async (req, res) => {
   try {
-    const { code, useremail } = req.body;
-    const isValid = await authService.verify(useremail, code);
+    const { code, email } = req.body;
+    const isValid = await authService.verify(email, code);
     if (!isValid)
       return res
         .status(status.NOT_ACCEPTABLE)
@@ -59,7 +59,7 @@ const validate = async (req, res) => {
       (err, token) => {
         if (err) throw err;
         return res.status(status.OK).json({
-          accessToken: token,
+          token: token,
           
         });
       }

@@ -1,16 +1,20 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
-  username: {
+  firstName: {
     type: String,
     required: true,
   },
-  useremail: {
+  lastName: {
+    type: String,
+    required: true,
+  },
+  email: {
     type: String,
     required: true,
     trim: true
   },
-  pass: {
+  password: {
     type: String,
     required: true,
   },
@@ -31,7 +35,7 @@ const UserSchema = new mongoose.Schema({
     default: 'Basic',
     enum: ["Basic", "Owner", "Admin"]
    },
-   accessToken: {
+   token: {
     type: String
    }
 });

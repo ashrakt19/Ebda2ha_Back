@@ -2,8 +2,8 @@ const bcrypt = require("bcryptjs");
 const User = require("../Models/User");
 
 class AuthService {
-  async login(useremail, pass) {
-    const user = await User.findOne({ useremail });
+  async login(email, password) {
+    const user = await User.findOne({ email });
 
     //validate user activation
     if (!user || !user.isValidated) {
@@ -11,15 +11,15 @@ class AuthService {
     }
 
     // confirm that the password is matched or not
-    const isMatch = await bcrypt.compare(pass, user.pass);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return false;
     const payload = {
       user: {
         id: user.id,
-        username: user.username,
-        useremail: user.useremail,
+        firstName: user.firstName,
+        email: user.email,
         role: user.role,
-        pass: user.pass
+        password: user.password
       },
     };
     return payload;
@@ -30,8 +30,8 @@ class AuthService {
 
 
   // verify user
-  async verify(useremail, code) {
-    const validatedUser = await User.findOne({ useremail });
+  async verify(email, code) {
+    const validatedUser = await User.findOne({ email });
 
     if (validatedUser.validationCode == code) {
       await validatedUser.update({ isValidated: true });
@@ -40,7 +40,7 @@ class AuthService {
       const payload = {
         user: {
           id: validatedUser.id,
-          username: validatedUser.username
+          firstName: validatedUser.firstName
         },
       };
       return payload;
